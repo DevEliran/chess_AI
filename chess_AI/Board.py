@@ -1,24 +1,27 @@
 import pygame
 import os
+from Pieces import *
 BOARD_LENGTH = 8
 SQUARE_SIZE = 80
 DISPLAY_SIZE = (800, 600)
 SURFACE_SIZE = (SQUARE_SIZE * BOARD_LENGTH, SQUARE_SIZE * BOARD_LENGTH)
-P1_COLOR = (125, 135, 150)
-P2_COLOR = (232, 235, 239)
+P1_COLOR = (232, 235, 239)
+P2_COLOR = (125, 135, 150)
 BOARD_TITLE = 'Chess'
-STARTING_POSITION = [['bR', 'bK', 'bB', 'bQ', 'bK', 'bB', 'bK', 'bR'],
+STARTING_POSITION = [['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
                      ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
                      ['-', '-', '-', '-', '-', '-', '-', '-'],
                      ['-', '-', '-', '-', '-', '-', '-', '-'],
                      ['-', '-', '-', '-', '-', '-', '-', '-'],
                      ['-', '-', '-', '-', '-', '-', '-', '-'],
                      ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
-                     ['wR', 'wK', 'wB', 'wQ', 'wK', 'wB', 'wK', 'wR']]
+                     ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR']]
 
 
 class Board(object):
     def __init__(self):
+        self.black_pieces = []
+        self.white_pieces = []
         self.images = {}
         self.colors = {0: P1_COLOR, 1: P2_COLOR}
         self._exit = False
@@ -41,14 +44,14 @@ class Board(object):
                     exit(True)
 
     def load_pieces(self):
-        print(STARTING_POSITION)
         curr_path = os.path.dirname('Board.py')
         image_path = os.path.join(curr_path, 'assets')
         pieces = [file.split('.')[0] for file in os.listdir('./assets')]
         for piece in pieces:
             image = os.path.join(image_path, piece + '.png')
             self.images[piece] = pygame.transform.scale(pygame.image.load(image),
-                                                        (SQUARE_SIZE, SQUARE_SIZE))
+                                                        (SQUARE_SIZE,
+                                                         SQUARE_SIZE))
 
     def draw_board(self):
         for file in range(BOARD_LENGTH):
@@ -64,8 +67,9 @@ class Board(object):
                 piece = STARTING_POSITION[rank][file]
                 if piece != '-':
                     self.board.blit(self.images[piece],
-                                    pygame.Rect(file * SQUARE_SIZE, rank * SQUARE_SIZE,
-                                  SQUARE_SIZE, SQUARE_SIZE))
+                                    pygame.Rect(file * SQUARE_SIZE,
+                                                rank * SQUARE_SIZE, SQUARE_SIZE,
+                                                SQUARE_SIZE))
 
     @property
     def exit(self):
